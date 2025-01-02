@@ -4,6 +4,7 @@ from utils.enemy import res_multiplier, def_multiplier
 from constants import STATS_ZEROED
 
 fighting_spirit = 192
+rots = 3
 
 characters = [
     {
@@ -31,7 +32,7 @@ characters = [
         "weapon": {
             "name": "Serpent Spine",
             "base_atk": 510,
-            "cd": 0.276,
+            "cr": 0.276,
         },
         "q": {
             "mvs": [
@@ -39,7 +40,7 @@ characters = [
             ],
             "instances": [
                 {
-                    "count": 1,
+                    "count": 1 * (rots - 1),
                     "reaction": "vaped"
                 }
             ]
@@ -50,11 +51,11 @@ characters = [
             ],
             "instances": [
                 {
-                    "count": 5,
+                    "count": 5 * rots,
                     "reaction": "vaped"
                 },
                 {
-                    "count": 1,
+                    "count": 1 * rots,
                     "reaction": "none"
                 }
             ]

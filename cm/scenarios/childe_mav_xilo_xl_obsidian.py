@@ -31,7 +31,7 @@ characters = [
         "weapon": {
             "name": "Serpent Spine",
             "base_atk": 510,
-            "cd": 0.276,
+            "cr": 0.276,
         },
         "q": {
             "mvs": [

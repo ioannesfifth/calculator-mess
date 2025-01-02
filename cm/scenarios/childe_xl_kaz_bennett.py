@@ -3,6 +3,8 @@ from utils.buffs import fantastic_voyage_buff, poetics_of_fuubutsu_buff, catch_b
 from utils.enemy import res_multiplier, def_multiplier
 from constants import STATS_ZEROED
 
+rots = 3
+
 characters = [
     {
         "name": "Xiangling",
@@ -37,11 +39,11 @@ characters = [
             ],
             "instances": [
                 {
-                    "count": 8,
+                    "count": 8 * rots,
                     "reaction": "vaped"
                 },
                 {
-                    "count": 4,
+                    "count": 4 * rots,
                     "reaction": "none"
                 },
             ]
@@ -52,11 +54,11 @@ characters = [
             ],
             "instances": [
                 {
-                    "count": 3,
+                    "count": 3 * rots,
                     "reaction": "vaped"
                 },
                 {
-                    "count": 3,
+                    "count": 3 * rots,
                     "reaction": "none"
                 }
             ]

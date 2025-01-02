@@ -30,9 +30,9 @@ characters = [
             "er": 0
         },
         "weapon": {
-            "name": "Serpent Spine",
-            "base_atk": 510,
-            "cr": 0.276,
+            "name": "A Thousand Blazing Suns",
+            "base_atk": 741,
+            "cr": 0.11,
         },
         "q": {
             "mvs": [
@@ -122,9 +122,9 @@ buffs = {
             "effect": {"dmg": 0.15}
         },
         {
-            "name": "Serpent Spine",
+            "name": "A Thousand Blazing Suns",
             "applies to": "all",
-            "effect": {"dmg": 0.5}
+            "effect": {"atk": 0.28 * 1.75, "cd": 0.2 * 1.75}
         }
     ]
 }
