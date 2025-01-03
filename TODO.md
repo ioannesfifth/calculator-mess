@@ -10,3 +10,5 @@
 [x] kaz -> xilo calc
 [x] enemy schema
 [ ] update dmg -> actual eleemnt
+[ ] Improve multi rot logic
+[ ] Add aggra swirl
