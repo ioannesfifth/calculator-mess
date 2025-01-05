@@ -3,7 +3,7 @@ from tests.sample_data import characters, buffs, enemy
 
 def test_calc():
     dmg = calculate_dmg(
-        character="Mauvika",
+        character_name="Mauvika",
         characters=characters,
         buffs=buffs["Mauvika"],
         enemy=enemy

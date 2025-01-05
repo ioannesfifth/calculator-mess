@@ -29,10 +29,10 @@ which should install all the dependencies you need.
 
 To run a calc, you'll need two things
 
-1. a python file in the `./scenarios` folder with your scenario e.g. buffs, stats, etc
+1. a python file in the `./cm/scenarios` folder with your scenario e.g. buffs, stats, etc
 2. the name of the character from that scenario you'd like to calc
 
-You should check the `./scenarios` folder for requirement 1. You'll find some examples.
+You should check the `./cm/scenarios` folder for requirement 1. You'll find some examples.
 
 If you need help figuring out stats, there are also some rudimentary tools in `./utils/substat_calculator` and `./utils/er_calculator` to help. There's a quick writeup in the README for the substat calculator too on the general process that I do for figuring out substats.
 
@@ -51,10 +51,16 @@ You can also add the `-v` flag to show the different numbers that were used for 
 
 ### **Schemas & Tests**
 
-If your scenario fails to load, you may just have some missing fields. You can cross reference the error you got with the schemas in the `./schemas` folder.
+If your scenario fails to load, you may just have some missing fields. You can cross reference the error you got with the schemas in the `./cm/schemas` folder.
 
 Also, if you ever plan on updating anything, there are some basic tests setup that'll confirm things are more or less still working. Just run
 
 ```bash
 poetry run pytest
+```
+
+Type checking via mypy is also an option via
+
+```bash
+poetry run mypy cm
 ```

@@ -1,4 +1,6 @@
-from constants import STATS
+from constants import STATS, TALENTS
+
+talents = TALENTS + ["all"]
 
 stats_properties = {}
 for stat in STATS:
@@ -77,7 +79,6 @@ weapon_schema = {
     "additionalProperties": False
 }
 
-talents = ["all", "q", "e", "na", "a1", "a4"]
 talent_schemas = {}
 for talent in talents:
     talent_schemas[talent] = talent_schema

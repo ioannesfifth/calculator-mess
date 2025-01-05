@@ -32,3 +32,5 @@ STATS = [
 ]
 
 STATS_ZEROED = {key: 0 for key in STATS}
+
+TALENTS = ["q", "e", "na", "a1", "a4"]
