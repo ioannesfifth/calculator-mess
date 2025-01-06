@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cm"
-version = "1.1.0"
+version = "1.2.0"
 description = ""
 authors = ["Ioannes <ioannesfifth@gmail.com>"]
 license = "GNU General Public License v3.0"

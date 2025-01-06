@@ -1,9 +1,7 @@
-from utils.general import find
+from utils.general import find, true, count, count, true
 from utils.buffs import fantastic_voyage_buff, poetics_of_fuubutsu_buff, catch_buff, emblem_of_severed_fate_buff
 from utils.enemy import res_multiplier, def_multiplier
 from constants import STATS_ZEROED
-
-rots = 3
 
 characters = [
     {
@@ -39,11 +37,11 @@ characters = [
             ],
             "instances": [
                 {
-                    "count": 8 * rots,
+                    "count": count(8),
                     "reaction": "vaped"
                 },
                 {
-                    "count": 4 * rots,
+                    "count": count(4),
                     "reaction": "none"
                 },
             ]
@@ -54,11 +52,11 @@ characters = [
             ],
             "instances": [
                 {
-                    "count": 3 * rots,
+                    "count": count(3),
                     "reaction": "vaped"
                 },
                 {
-                    "count": 3 * rots,
+                    "count": count(3),
                     "reaction": "none"
                 }
             ]
@@ -74,14 +72,6 @@ characters = [
         "weapon": {
             "name": "Skyward Blade",
             "base_atk": 608,
-        },
-        "q": {
-            "mvs": [
-                {
-                    "mv": 1.39,
-                    "scales on": "atk"
-                }
-            ]
         },
     },
     {
@@ -102,32 +92,32 @@ buffs = {
     "Xiangling": [
         {
             "name": "Fantasic Voyage",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": fantastic_voyage_buff(find("Bennett", characters))
         },
         {
             "name": "Poetics of Fuubutsu",
-            "applies to": "all",
+            "applies to": {"all": true},
             "effect": poetics_of_fuubutsu_buff(find("Kazuha", characters))
         },
         {
             "name": "Noblesse Oblige",
-            "applies to": "all",
+            "applies to": {"all": true},
             "effect": {"atk": 0.2}
         },
         {
             "name": "Bennett C6",
-            "applies to": "all",
+            "applies to": {"all": true},
             "effect": {"dmg": 0.15}
         },
         {
             "name": "The Catch passive",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": catch_buff()
         },
         {
             "name": "Emblem of Severed Fate",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": emblem_of_severed_fate_buff(find("Xiangling", characters))
         },
     ]

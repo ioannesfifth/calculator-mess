@@ -1,3 +1,4 @@
+from typing import Any
 from constants import STATS, TALENTS
 
 talents = TALENTS + ["all"]
@@ -9,7 +10,7 @@ for stat in STATS:
 instance_schema = {
     "type": "object",
     "properties": {
-        "count": {"type": "number"},
+        "count": {"type": "function"},
         "reaction": {"type": "string"}
     },
     "required": [
@@ -101,13 +102,18 @@ character_schema = {
     "additionalProperties": False
 }
 
+applies_to_schemas: dict[str, Any] = {}
+for talent in talents:
+    applies_to_schemas[talent] = {"type": "function"}
 buffs_schema = {
     "type": "object",
     "properties": {
         "name": {"type": "string"},
         "applies to": {
-            "type": "string",
-            "enum": talents
+            "type": "object",
+            "properties": {
+                **applies_to_schemas
+            }
         },
         "effect": stats_schema
     },

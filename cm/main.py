@@ -1,25 +1,27 @@
 from typing import Any
 import argparse
-from utils.general import find
+from utils.general import find, true, count
 from utils.reactions import amp_multiplier
 from utils.formatting import result_string
+from utils.validator import ExtendedValidator
 import importlib
 from jsonschema import validate
 from schemas import character_schema, buffs_schema, enemy_schema
 from constants import TALENTS
+import copy
 
-
-def apply_buff(buff, talent_type, rotations, talent_stats) -> None:
+def apply_buff(buff, talent_type, i_rotation, i_instance, instance) -> None:
     for stat in buff["effect"]:
         if (
-            "all" in buff["applies to"] or
             (
-                buff["applies to"].get(talent_type)
-                and buff["applies to"][talent_type](rotations)
+                "all" in buff["applies to"] and
+                buff["applies to"]["all"](i_rotation, i_instance)
+            ) or (
+                buff["applies to"].get(talent_type) and
+                buff["applies to"][talent_type](i_rotation, i_instance)
             )
         ):
-            talent_stats[stat] += buff["effect"][stat]
-
+            instance[stat] += buff["effect"][stat]
 
 def damage_formula(
     base_atk: int = 0,
@@ -58,15 +60,14 @@ def damage_formula(
         )
 
     if verbose:
-        print("  atk", (base_atk * (1 + atk) + flat_atk))
-        print("  mv")
+        print("  atk:           ", (base_atk * (1 + atk) + flat_atk))
         for mv in mvs:
-            print("    mv", mv["mv"])
-        print("  dmg", (1 + dmg))
-        print("  cr", cr)
-        print("  cd", (1 + cd))
-        print("  amp_multiplier", amp_multiplier)
-        print("  damage", sum(damage_terms))
+            print("  mv:            ", mv["mv"])
+        print("  dmg:           ", (1 + dmg))
+        print("  cr:            ", cr)
+        print("  cd:            ", cd)
+        print("  amp_multiplier:", amp_multiplier)
+        print("  damage:        ", sum(damage_terms))
 
     return sum(damage_terms)
 
@@ -79,16 +80,17 @@ def setup(character_name, scenario, verbose: bool = False) -> dict[str, Any]:
 
     characters: list[dict[str, Any]] = scenario_.characters
     buffs: dict[str, Any] = scenario_.buffs
+    print(buffs)
     enemy: dict[str, Any] = scenario_.enemy
 
-    # for character_ in characters:
-    #     validate(instance=character_, schema=character_schema)
+    for character_ in characters:
+        ExtendedValidator(character_schema).validate(character_)
 
-    # for character_buffs in buffs.values():
-    #     for buff in character_buffs:
-    #         validate(instance=buff, schema=buffs_schema)
+    for character_buffs in buffs.values():
+        for buff in character_buffs:
+            ExtendedValidator(buffs_schema).validate(buff)
 
-    # validate(instance=enemy, schema=enemy_schema)
+    validate(instance=enemy, schema=enemy_schema)
 
     setup_ = {
         "characters": characters,
@@ -116,46 +118,51 @@ def calculate_talent_dmg(
     rotations: int = 1,
     verbose: bool = False
 ) -> float:
-    talent_instances_dmg: list[list[float]] = []
-    for talent_instance in character[talent_type]:
-        talent_stats = {
-            **talent_instance,
-            **stats
-        }
-        print(talent_type)
-        print(talent_stats)
-        print("\n\n")
-
-        for buff in buffs:
-            apply_buff(buff, talent_type, rotations, talent_stats)
-
-        talent_dmg = []
-        for instance in talent_stats["instances"]:
-            talent_dmg.append(damage_formula(
-                verbose=verbose,
-                base_atk=talent_stats["base_atk"],
-                atk=talent_stats["atk"],
-                flat_atk=talent_stats["flat_atk"],
-                mvs=talent_stats["mvs"],
-                dmg=talent_stats["dmg"],
-                cr=talent_stats["cr"],
-                cd=talent_stats["cd"],
-                amp_multiplier=amp_multiplier(
-                    instance["reaction"], talent_stats["em"])
-            ) * instance["count"](rotations))
-
-        talent_instances_dmg.append(talent_dmg)
-
     enemy_multiplier = enemy["res"] * enemy["def"]
+    character_talent = character[talent_type]
 
-    total_talent_dmg = sum([sum(talent_dmg) for talent_dmg in talent_instances_dmg]) * enemy_multiplier
+    total_dmg = []
+    for i_rotation in range(rotations):
+        instances = []
+        for instance in character_talent["instances"]:
+            for i in range(instance["count"](i_rotation)):
+                instances += [{
+                        "mvs": character_talent["mvs"],
+                        "reaction": instance["reaction"],
+                        **stats
+                    }]
 
-    if verbose:
-        print("Enemy multiplier:", enemy_multiplier)
-        print(f"Total {talent_type} damage:", total_talent_dmg)
+        rotation_dmg = []
+        for i_instance, instance in enumerate(instances):
+            for buff in buffs:
+                apply_buff(buff, talent_type, i_rotation, i_instance, instance)
+            
+            if verbose:
+                print(f"\n=== {talent_type.capitalize()} rotation {i_rotation} instance {i_instance} ===")
+
+            damage = damage_formula(
+                verbose=verbose,
+                base_atk=instance["base_atk"],
+                atk=instance["atk"],
+                flat_atk=instance["flat_atk"],
+                mvs=instance["mvs"],
+                dmg=instance["dmg"],
+                cr=instance["cr"],
+                cd=instance["cd"],
+                amp_multiplier=amp_multiplier(
+                    instance["reaction"], instance["em"])
+            ) * enemy_multiplier
+
+            if verbose:
+                print("  real damage:   ", damage)
+
+            rotation_dmg.append(damage)
+
+        total_dmg.append(sum(rotation_dmg))
+
+    total_talent_dmg = sum(total_dmg)
 
     return total_talent_dmg
-
 
 def calculate_dmg(
     character_name: str = "",
@@ -225,8 +232,9 @@ def main() -> None:
 
     print("\n----------------------------------------\n")
 
+    max_characters = max([len(x) for x in dmg.keys()])
     for talent_type, value in dmg.items():
-        print(result_string(talent_type, value))
+        print(result_string(f"{talent_type.capitalize()}:{' ' * (max_characters - len(talent_type))}", value))
 
 
 if __name__ == "__main__":

@@ -1,10 +1,9 @@
-from utils.general import find
+from utils.general import find, true, count, count, true
 from utils.buffs import fantastic_voyage_buff
 from utils.enemy import res_multiplier, def_multiplier
 from constants import STATS_ZEROED
 
 fighting_spirit = 192
-rots = 3
 
 characters = [
     {
@@ -34,32 +33,34 @@ characters = [
             "base_atk": 510,
             "cr": 0.276,
         },
-        "q": {
-            "mvs": [
-                {"mv": 8.0064 + 0.0288 * fighting_spirit, "scales on": "atk"}
-            ],
-            "instances": [
-                {
-                    "count": 1 * (rots - 1),
-                    "reaction": "vaped"
-                }
-            ]
+        "q":
+            {
+                "mvs": [
+                    {"mv": 8.0064 + 0.0288 * fighting_spirit, "scales on": "atk"}
+                ],
+                "instances": [
+                    {
+                        "count": lambda i_rotation : 1 if i_rotation > 0 else 0,
+                        "reaction": "vaped"
+                    }
+                ]
         },
-        "e": {
-            "mvs": [
-                {"mv": 2.304, "scales on": "atk"}
-            ],
-            "instances": [
-                {
-                    "count": 5 * rots,
-                    "reaction": "vaped"
-                },
-                {
-                    "count": 1 * rots,
-                    "reaction": "none"
-                }
-            ]
-        }
+        "e":
+            {
+                "mvs": [
+                    {"mv": 2.304, "scales on": "atk"}
+                ],
+                "instances": [
+                    {
+                        "count": count(3),
+                        "reaction": "none"
+                    },
+                    {
+                        "count": count(3),
+                        "reaction": "vaped"
+                    },
+                ]
+        },
     },
     {
         "name": "Bennett",
@@ -72,14 +73,6 @@ characters = [
             "name": "Skyward Blade",
             "base_atk": 608,
         },
-        "q": {
-            "mvs": [
-                {
-                    "mv": 1.39,
-                    "scales on": "atk"
-                }
-            ]
-        },
     },
 ]
 
@@ -87,43 +80,42 @@ buffs = {
     "Mauvika": [
         {
             "name": "Fantasic Voyage",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": fantastic_voyage_buff(find("Bennett", characters))
         },
         {
             "name": "Scroll of Cinder City",
-            "applies to": "all",
+            "applies to": {"all": true},
             "effect": {"dmg": 0.4}
         },
         {
             "name": "Obsidian Codex",
-            "applies to": "q",
+            "applies to": {"q": true, "e": lambda _, i_instance: i_instance < 3},
             "effect": {"cr": 0.4, "dmg": 0.15}
         },
         {
             "name": "Mauvika's A1",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": {"atk": 0.3}
         },
-        # Not sure?
         {
             "name": "Mauvika's A4",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": {"dmg": 0.002*fighting_spirit}
         },
         {
             "name": "Noblesse Oblige",
-            "applies to": "all",
+            "applies to": {"all": true},
             "effect": {"atk": 0.2}
         },
         {
             "name": "Bennett C6",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": {"dmg": 0.15}
         },
         {
             "name": "Serpent Spine",
-            "applies to": "all",
+            "applies to": {"all": true},
             "effect": {"dmg": 0.5}
         }
     ]

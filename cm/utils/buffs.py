@@ -35,6 +35,3 @@ def poetics_of_fuubutsu_buff(kazuha):
             get_character_stat(kazuha, "weapon", "em")
         ) / 100
     }
-
-def true(rotations: int) -> bool:
-    return True 

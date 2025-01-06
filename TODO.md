@@ -10,6 +10,6 @@
 [x] kaz -> xilo calc
 [x] enemy schema
 [ ] update dmg -> actual eleemnt
-[ ] Improve multi rot logic
+[x] Improve multi rot logic
 [ ] Add aggra swirl
-[ ] Add multi instance buffs (e.g. 3 s of E buff and 3 s without buff)
+[x] Add multi instance buffs (e.g. 3 s of E buff and 3 s without buff)

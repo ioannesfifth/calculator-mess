@@ -1,4 +1,4 @@
-from utils.general import find
+from utils.general import find, true, count, count, true
 from utils.buffs import fantastic_voyage_buff, poetics_of_fuubutsu_buff
 from utils.enemy import res_multiplier, def_multiplier
 from constants import STATS_ZEROED
@@ -39,7 +39,7 @@ characters = [
             ],
             "instances": [
                 {
-                    "count": 1,
+                    "count": count(1),
                     "reaction": "vaped"
                 }
             ]
@@ -50,11 +50,11 @@ characters = [
             ],
             "instances": [
                 {
-                    "count": 5,
+                    "count": count(5),
                     "reaction": "vaped"
                 },
                 {
-                    "count": 1,
+                    "count": count(1),
                     "reaction": "none"
                 }
             ]
@@ -70,14 +70,6 @@ characters = [
         "weapon": {
             "name": "Skyward Blade",
             "base_atk": 608,
-        },
-        "q": {
-            "mvs": [
-                {
-                    "mv": 1.39,
-                    "scales on": "atk"
-                }
-            ]
         },
     },
     {
@@ -98,27 +90,27 @@ buffs = {
     "Mauvika": [
         {
             "name": "Fantasic Voyage",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": fantastic_voyage_buff(find("Bennett", characters))
         },
         {
             "name": "Poetics of Fuubutsu",
-            "applies to": "all",
+            "applies to": {"all": true},
             "effect": poetics_of_fuubutsu_buff(find("Kazuha", characters))
         },
         {
             "name": "Obsidian Codex",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": {"cr": 0.4, "dmg": 0.15}
         },
         {
             "name": "Mauvika's A1",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": {"atk": 0.3}
         },
         {
             "name": "Mauvika's A4",
-            "applies to": "q",
+            "applies to": {"q": true},
             "effect": {"dmg": 0.22}
         },
     ]
