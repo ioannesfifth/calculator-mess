@@ -49,6 +49,8 @@ For example,
 
 You can also add the `-v` flag to show the different numbers that were used for the calc.
 
+You can use `-r <number of rotations>` to calculate for multiple rotations.
+
 ### **Schemas & Tests**
 
 If your scenario fails to load, you may just have some missing fields. You can cross reference the error you got with the schemas in the `./cm/schemas` folder.
